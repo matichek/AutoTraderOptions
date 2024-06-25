@@ -58,8 +58,11 @@
 <!-- skill check start -->	
 		  <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" /> 
 		  <set_value name="$ComCharge" exact="100-$Level/4"/> 
-		  <set_value name="$Tmax" exact="(1080 - 9*$Level)s"/>
-		  <set_value name="$Tmin" exact="2*$Tmax/3"/> 	
+
+            <!-- M -->
+		  <set_value name="$Tmax" exact="1s"/>
+		  <set_value name="$Tmin" exact="1"/> 	
+
 <!-- skill check end   -->				 
 <!-- check wares in ship first -->	
 		  <set_value name="$Cargo" exact="this.ship.cargo.list" />
