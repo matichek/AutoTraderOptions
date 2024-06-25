@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<mdscript name="EuclidsAutoAltTrigger" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+	<cues>
+		<cue name="EuclidsTradeMenusIni" instantiate="true" namespace="this">
+			<conditions>
+        <event_conversation_started conversation="default" />
+				<check_all> 
+				 <check_value value="event.object.controlled?" />
+				 <check_value value="event.object.controlled.isclass.ship and event.object.controlled.isplayerowned and (event.object.command.value == command.wait or event.object.command.value == null) and (event.object.commandaction.value == commandaction.flying or event.object.commandaction.value == null)" />
+				</check_all>	
+      </conditions>
+			 <actions>
+		    <do_if value="event.object">
+					<signal_cue_instantly cue="md.EuclidsAutoTraderAlt.EuclidsATinit" param="event.object"/>
+				</do_if>
+			  <do_else>
+				 <cancel_cue cue="EuclidsTradeMenusIni"/>
+			  </do_else>
+			 </actions>
+		</cue>
+	</cues>
+</mdscript>

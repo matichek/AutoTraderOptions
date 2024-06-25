@@ -1,0 +1,41 @@
+[color=cyan]Questions and Answers[/color]
+
+Q: I've Comm the ship but do not get the Auto Trade Menu option. What do I miss?
+A: The option will show only if the ship has only the default order (Hold position) and is in space (not docked).
+
+Q: I started the autotrader on a ship but I cannot see any orders or commands. How can I tell the Autotrader is working?
+A: If there is a star "*" behind the pilot's name the script is running. Also you should see a message in the player's logbook.
+
+Q: I have set/changed an option in the setup. How do I know if it's actually working?
+A: As soon as you set an option a message will be sent to the logbook. Also the current option settings are part of the regular message the autotrader send to your logbook.
+
+Q: I've an autotrader running and added the "auto trade" to the orders of the ship as well as some wares to the list that shows there. Now is not doing anything. What is wrong?
+A: Once you have started the "Auto trade" any order you give to that ship can potentially cause errors. There is no need to add any orders or wares nor command him to do anything. He will trade and/or mine autonomously without any need to intervene. To "fix" your autotrader comm and select "Stop Autotrade" then remove all orders and start the Auto Trade again.
+
+Q: I see the message of the autotrader in my logbook but do not know what, for example, "Know 0" means.
+A: All settings are boolean variables which can have two values "true" (or 0) and "false" (or 1). In your example it means that your autotrader (or autominer) will only trade with station (and harvest resources) you have discovered.
+
+Q: The Mod is broken! I've started the Auto Trade on a ship, the captain has a star behind his name, I've received one message in the logbook, the ship did move but now it's just hanging there doing nothing. What is wrong?
+A: The ship is waiting which can have several reasons. Either it is on a cooldown which can take up to 90 minutes if the captain is a rookie and the only crew. It can also be due to the lack of discovered trade offers/ resource areas. This will happen frequently if you set "Known" to false (0) and have not discovered sufficient stations/resource areas.
+
+Q: I've 20+ miners and 40+ traders on Auto Trade and made 100 Gazillion Credits in one hours. Isn't that cheating?
+A: The mod is not meant for a fleet of traders. Usually 2 or 3 miners and traders are enough to keep you afloat while you have time to explore, do missions or start to build stations. If this is not your play-style and you insist of having a huge fleet of trader ships then you do not need this mod.
+
+Q: Is there something wrong with the money transfer? I never get charged for buying wares and receive only profits.
+A: The way trade accounts are coded in a balancing way, i.e. after a trade is completed the difference between the income and the spending of that trade is transferred to the player.
+
+Q: I'm running the latest version but the profits shown in the logbook are totally screwed, switching between negative values and billions of credit profit. Is the mod broken?
+A: Very unlikely! I'm running the mod for many hours in different setups and never had such an issue. It's is more likely that you run another mod that interfers. However, if you can exclude a mod incompatibility then please email your saved game and I'll take a look.
+
+Q: My Autotraders keep trading in illegal wares filling the storage of equipment docks, ship yards and wharves, instead of trading in urgently needed build resoures. It seems the autotrader mod broke the economy that way.
+A: The Autotrader mod does not "invent" new trade offers. It searches for the most profitable offers provided by the vanilla game. Drugs (spaceweed, spacefuel and majadust) are usually most profitable and are bought by trade stations and those stations you have mentioned. They cannot  overload the storage (there is a failsafe in the vanilla game for that). However, if you do not wish them to deal in illegal wares then use the setup to disable the trade in such wares.
+
+Q: The mod will destroy the economy because it magically spawns wares rather than buys them. Also it never transfers wares to the buyer. Why did you code it that way?
+A: You are wrong in all accounts unless you run another mod that interferes with the AutoTrader. If you check the code then you will find the lines where wares are transferred from the seller to the ship and from the ship to the buyer. There are no wares just "spawned"! And concerning the economy: This mod was originally coded to accelerate the ware distribution in the galaxy in order to study long term effects to the economy.
+
+Q: The autotrader is just sitting near a station for many minutes and got attacked by marauders. I know they are just waiting there but can you make them dock or add an emegency jump so they do not get destroyed?
+A: No, because the entire docking and undocking procedure will cause more issues like waiting for free docking slots, destroyed docking areas, destroyed stations and colisions with other ships, to mention only a few. And concering enemy attacks, the autotrader will be fairly safe near a station as the corresponding faction usually attacks any enemy ships. Besides, enemy attacks do happen in the game even if you run a vanilla trader and it's up to you to protect them. 
+
+Q: Allright, I've read all the wall of text and now I wonder how you use the mod? 
+A: It depends on the gamestart but in general I make some credits with missions, scoop up loot, shooting Xenons/Kha'ak and collecting crystals until I can afford a miner ship. The Drill (solid) is usually the first I make autominer. Later I add a gas/liquid autominer. The end goal is to have a Pelican for autotrading and one each of the Cranes, solid and gas/liquid, as autominers. Three ships are enough for a long time until I have the PHQ, good reputations and blueprints to start building stations. Then I add three more and add crew from my stations (habitat module) over time to make them trade/mine more efficient.
+

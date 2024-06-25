@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content id="AuT" name="AutoTraderOptions" description="A Fire-and-Forget Trader or Miner with various option" author="Euclid" version="0.9" date="2023-30-01" save="0" enabled="1">
+	<text language="7" name="AutoTrader" description="Universe Trader vernulsya s razlichnymi variantami" author="Euclid" />
+  <text language="33" name="AutoTrader" description="L'Univers Trader est de retour avec diverses options" author="Euclid" />
+	<text language="34" name="AutoTrader" description="El Universe Trader está de vuelta con varias opciones" author="Euclid" />
+  <text language="39" name="AutoTrader" description="The Universe Trader è tornato con varie opzioni" author="Euclid" />
+	<text language="44" name="AutoTrader" description="The Universe Trader is back with various options" author="Euclid" />
+  <text language="49" name="AutoTrader" description="Der Universe Trader ist zurück mit verschiedenen Optionen" author="Euclid" />
+	<text language="86" name="AutoTrader" description="宇宙交易者回来了各种选择" author="Euclid" />
+  <text language="88" name="AutoTrader" description="宇宙交易者回來了各種選擇" author="Euclid" />
+ </content>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mdscript name="EuclidsAutoTraderAlt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="md.xsd">
+ <cues>
+	 <cue name="EuclidsATinit" instantiate="true" namespace="this">
+		 <conditions>
+			<event_cue_signalled />
+		 </conditions>
+	 <actions>
+		<add_player_choice_sub text="'Auto Trade Menu'" section="gAT_menu"/>  
+	 </actions>
+	 </cue>
+	 
+   <cue name="EuclidsATinit0" instantiate="true" namespace="this">
+		 <conditions>
+			<check_any>
+			 <event_conversation_next_section section="gAT_menu"/>
+			 <event_conversation_returned_to_section sectionprefix="gAT_" />
+			</check_any>	 
+     </conditions>
+		 <actions>
+			 <do_if value="not @event.object.$trader">
+				<add_player_choice text="'Auto Trade'" section="gautotrade"/>  
+			 </do_if>
+			 <do_elseif value="event.object.$trader">
+					<add_player_choice text="'Stop AutoTrade'" section="gATstop"/> 
+			 </do_elseif>
+			 <add_player_choice_sub text="'AutoTrade Setup'" section="gATS_setup"/> 
+			 <add_player_choice_return text="{1002,21}"/>
+     </actions>
+		</cue>
+	 
+	  <cue name="EuclidsATinit1" instantiate="true" namespace="this">
+		 <conditions>
+			 <event_conversation_next_section section="gautotrade"/>
+		 </conditions>
+		 <actions>
+			 <do_if value="not @event.object.$trader">
+					<set_value name="event.object.$trader" exact="0"/>
+			 </do_if> 
+			 <do_if value="event.object.ship.cargo.free.liquid or event.object.ship.cargo.free.solid">
+ 
+				 <do_if value="not event.object.$Jump?">
+          <set_value name="event.object.$Jump" exact="true"/>
+         </do_if>
+         <do_if value="not event.object.$Prefer?">
+          <set_value name="event.object.$Prefer" exact="true"/>
+         </do_if>
+         <do_if value="not event.object.$Known?">
+          <set_value name="event.object.$Known" exact="true"/>
+         </do_if>
+		     <set_value name="event.object.$trader" exact="1"/>
+				 <set_value name="event.object.$name" exact="event.object.knownname"/>
+			   <set_object_name object="event.object" name="event.object.knownname + '*'" /> 
+			   <start_script object="event.object" name="'stationautominer'"/>
+			 </do_if>
+			 <do_else>
+				 <do_if value="not event.object.$Jump?">
+           <set_value name="event.object.$Jump" exact="true"/>
+         </do_if>
+         <do_if value="not event.object.$Prefer?">
+          <set_value name="event.object.$Prefer" exact="true"/>
+         </do_if>
+         <do_if value="not event.object.$Known?">
+          <set_value name="event.object.$Known" exact="true"/>
+         </do_if>
+         <do_if value="not event.object.$Allwares?">
+          <set_value name="event.object.$Allwares" exact="true"/>
+         </do_if>
+			   <set_value name="event.object.$trader" exact="1"/>
+				 <set_value name="event.object.$name" exact="event.object.knownname"/>
+				 <set_object_name object="event.object" name="event.object.knownname + '*'" /> 
+			   <start_script object="event.object" name="'stationautotrade'"/>
+			 </do_else> 
+			</actions>
+		</cue>
+
+	  <cue name="EuclidsATinit2" instantiate="true" namespace="this">
+		 <conditions>
+			 <event_conversation_next_section section="gATstop"/>
+		 </conditions>
+		 <actions>
+			<set_value name="$ship" exact="event.object.ship"/> 
+		  <set_object_name object="event.object" name="event.object.$name" /> 
+		  <abort_scripts entity="event.object"/>
+	    <dismiss_control_entity object="$ship" actor="event.object"/>
+			<assign_control_entity actor="event.object" object="$ship" post="controlpost.aipilot"/>
+		  <remove_value name="event.object.$trader"/> 
+			<remove_value name="event.object.$name"/>  
+	    <remove_value name="$ship"/> 
+		 </actions>
+	 </cue>	   
+	
+	 <cue name="EuclidsATinit3" instantiate="true" namespace="this">
+		 <conditions>
+			<event_conversation_next_section section="gATS_setup"/>
+		 </conditions>
+		 <actions>
+			<do_if value="event.object.ship.cargo.free.liquid or event.object.ship.cargo.free.solid">
+			 <add_player_choice_sub text="'Jump'" section="gATS_jump"/>  
+			 <add_player_choice_sub text="'Prefer Player Stations'" section="gATS_prefer"/> 
+			 <add_player_choice_sub text="'Know all Trades'" section="gATS_known"/> 
+			</do_if>
+			<do_else> 
+			 <add_player_choice_sub text="'Jump'" section="gATS_jump"/>  
+			 <add_player_choice_sub text="'Prefer Player Stations'" section="gATS_prefer"/> 
+			 <add_player_choice_sub text="'Know all Trades'" section="gATS_known"/> 
+			 <add_player_choice_sub text="'Trade all Wares'" section="gATS_allwares"/>
+			</do_else>	
+			 <add_player_choice_return text="{1002,20}" />
+		 </actions>
+		</cue>
+	 
+	  <cue name="EuclidsATinit4" instantiate="true" namespace="this">
+		 <conditions>
+			<check_any>
+			 <event_conversation_next_section section="gATS_jump"/>
+			 <event_conversation_next_section section="gATS_prefer"/>
+			 <event_conversation_next_section section="gATS_known"/>
+			 <event_conversation_next_section section="gATS_allwares"/>
+		  </check_any>	 
+		 </conditions>
+		 <actions>
+			  <do_if value="event.param == 'gATS_jump'">
+					<do_if value="not event.object.$Jump?">
+						<set_value name="event.object.$Jump" exact="false"/>
+						<write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Jump changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Jump]" />
+					</do_if>
+					<do_else>
+				   <set_value name="event.object.$Jump" exact="not event.object.$Jump"/>
+				   <write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Jump changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Jump]" />	
+					</do_else>		
+			  </do_if>
+				<do_if value="event.param == 'gATS_prefer'">
+					<do_if value="not event.object.$Prefer?">
+						<set_value name="event.object.$Prefer" exact="false"/>
+						<write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Prefer Player Stations changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Prefer]" />
+					</do_if>
+					<do_else>
+				   <set_value name="event.object.$Prefer" exact="not event.object.$Prefer"/>
+					 <write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Prefer Player Stations changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Prefer]" />	
+					</do_else>		
+				</do_if>
+			  <do_if value="event.param == 'gATS_known'">
+					<do_if value="not event.object.$Known?">
+						<set_value name="event.object.$Known" exact="false"/>
+						<write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Know all Trades changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Known]" />
+					</do_if>
+					<do_else>
+				   <set_value name="event.object.$Known" exact="not event.object.$Known"/>
+					 <write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(ID %3): Parameter Know all Trades changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Known]" />	
+					</do_else>		
+				</do_if>
+			  <do_if value="event.param == 'gATS_allwares'">
+				  <do_if value="not event.object.$Allwares?">
+						<set_value name="event.object.$Allwares" exact="false"/>
+						<write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Trade all wares changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Allwares]" />
+					</do_if>
+					<do_else>
+				   <set_value name="event.object.$Allwares" exact="not event.object.$Allwares"/>
+					 <write_to_logbook category="upkeep" title="'AutoTraderSetup'" text="'%1 on %2(%3): Parameter Trade all wares changed to %4'.[event.object.knownname,event.object.ship.knownname,event.object.ship.idcode,event.object.$Allwares]" />	
+					</do_else>		
+				</do_if>
+		 </actions>
+		</cue>
+	  
+ </cues>
+</mdscript>
