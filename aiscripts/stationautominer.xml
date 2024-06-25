@@ -1,348 +1,355 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-<aiscript name="stationautotrade" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
-	<attention min="unknown">
+<aiscript name="stationautominer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="aiscripts.xsd" version="1">
+	 <attention min="unknown">
 	 <actions>
-		 
-<!-- all wares -->
-		  <set_value name="$Awares" 
-			exact="[ware.spacefuel,ware.spaceweed,ware.advancedcomposites,ware.advancedelectronics,ware.antimattercells,ware.antimatterconverters,ware.claytronics,
-			ware.dronecomponents,ware.engineparts,ware.fieldcoils,ware.hullparts,ware.refinedmetals,ware.scanningarrays,ware.shieldcomponents,ware.siliconwafers,
-			ware.teladianium,ware.turretcomponents,ware.water,ware.wheat,ware.energycells,ware.foodrations,ware.graphene,ware.majadust,ware.majasnails,ware.meat,
-			ware.microchips,ware.quantumtubes,ware.medicalsupplies,ware.missilecomponents,ware.nostropoil,ware.plasmaconductors,ware.smartchips,ware.sojabeans,
-			ware.sojahusk,ware.spices,ware.sunriseflowers,ware.superfluidcoolant,ware.swampplant,ware.weaponcomponents,ware.condensate,ware.cheltmeat,ware.scruffinfruits,
-			ware.computronicsubstrate,ware.metallicmicrolattice,ware.proteinpaste,ware.siliconcarbide,ware.terranmre,ware.stimulants,ware.scrapmetal,ware.bofu,ware.bogas,ware.plankton]"/>
-		 
-		  <!-- legal wares -->
-		  <set_value name="$Lwares" 
-			exact="[ware.advancedcomposites,ware.advancedelectronics,ware.antimattercells,ware.antimatterconverters,ware.claytronics,
-			ware.dronecomponents,ware.engineparts,ware.fieldcoils,ware.hullparts,ware.refinedmetals,ware.scanningarrays,ware.shieldcomponents,ware.siliconwafers,
-			ware.teladianium,ware.turretcomponents,ware.water,ware.wheat,ware.energycells,ware.foodrations,ware.graphene,ware.majasnails,ware.meat,
-			ware.microchips,ware.quantumtubes,ware.medicalsupplies,ware.missilecomponents,ware.nostropoil,ware.plasmaconductors,ware.smartchips,ware.sojabeans,
-			ware.sojahusk,ware.spices,ware.sunriseflowers,ware.superfluidcoolant,ware.swampplant,ware.weaponcomponents,ware.condensate,ware.cheltmeat,ware.scruffinfruits,
-			ware.computronicsubstrate,ware.metallicmicrolattice,ware.proteinpaste,ware.siliconcarbide,ware.terranmre,ware.stimulants,ware.scrapmetal,ware.bofu,ware.bogas,ware.plankton]"/>
-<!-- base values -->
-      <set_value name="$x" min="-500m" max="500m"/>
-			<set_value name="$y" min="7500m" max="15000m"/>  
-			<set_value name="$z" min="-500m" max="500m"/>
-		  <do_if  value="not @this.$Budget"  >
+<!-- only collectables .... X4 miner gas, liquid, solid-->
+		 <set_value name="$Cwares" exact="[ware.helium,ware.methane,ware.hydrogen]"/>
+		 <do_if value="this.ship.cargo.free.solid"   >
+		    <set_value name="$Cwares" exact="[ware.ice,ware.nividium,ware.ore,ware.silicon]"/>
+		 </do_if>
+         <set_value name="$x" min="-500m" max="500m"/>
+		 <set_value name="$y" min="7500m" max="15000m"/>  
+		 <set_value name="$z" min="-500m" max="500m"/>
+	     <do_if value="not @this.$Budget" >
 		   <set_value name="this.$Budget" exact="0"/>
-		  </do_if>
-		  <do_if  value="not this.$Jump?"  >
+		 </do_if>
+		 <do_if  value="not this.$Jump?"  >
 		   <set_value name="this.$Jump" exact="true"/>
-		  </do_if>
-		  <do_if  value="not this.$Prefer?"  >
+		 </do_if>
+		 <do_if  value="not this.$Prefer?"  >
 		   <set_value name="this.$Prefer" exact="true"/>
-		  </do_if>
-		  <do_if  value="not this.$Known?"  >
+		 </do_if>
+		 <do_if  value="not this.$Known?"  >
 		   <set_value name="this.$Known" exact="true"/>
-		  </do_if>
-		  <do_if  value="not this.$Allwares?"  >
-		   <set_value name="this.$Allwares" exact="true"/>
-		  </do_if>
-		  <set_value name="$Pilot" exact="this.knownname"/>
-		  <set_value name="$range" exact="player.galaxy" />
-			<set_value name="$Title" exact="'Autotrader'"/>
+		 </do_if>
+		 <set_value name="$Pilot" exact="this.knownname"/>
+		 <set_value name="$range" exact="player.galaxy" />
+		 <set_value name="$Title" exact="'Autonminer'"/>
 <!-- trade loop start -->		
-      <label name="start" />
-		  <set_value name="$Gwares" exact="$Lwares"/>
-		  <do_if value="this.$Allwares" >
-		   <set_value name="$Gwares" exact="$Awares"/>
-		  </do_if>		
-	      <do_if value="not @this.$TBudget" >
+		 <label name="start" />
+         <do_if value="not @this.$TBudget" >
 		   <set_value name="this.$TBudget" exact="0"/>
-		  </do_if>		 
-          <set_value name="$Oldbudget" exact="this.$Budget/100"/>
-		  <set_value name="this.$TBudget" exact="($Oldbudget/(10^12))i" operation="add"/>
-		  <set_value name="$Newbudget" exact="($Oldbudget)L % (10^12)L"/>
-          <set_value name="this.$Budget" exact="100*$Newbudget"/>
+		 </do_if>		
+         <set_value name="$Oldbudget" exact="this.$Budget/100"/>
+		 <set_value name="this.$TBudget" exact="($Oldbudget/(10^12))i" operation="add"/>
+		 <set_value name="$Newbudget" exact="($Oldbudget)L % (10^12)L"/>
+		 <set_value name="this.$Budget" exact="100*$Newbudget"/>
 <!-- skill check start -->	
-		  <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" /> 
-		  <set_value name="$ComCharge" exact="100-$Level/4"/> 
-		  <set_value name="$Tmax" exact="(1080 - 9*$Level)s"/>
-		  <set_value name="$Tmin" exact="2*$Tmax/3"/> 	
+		 <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" /> 
+		 <set_value name="$ComCharge" exact="100-$Level/4"/> 
+		 <set_value name="$Tmax" exact="(1380 - 9*$Level)s"/>
+		 <set_value name="$Tmin" exact="2*$Tmax/3"/> 	
 <!-- skill check end   -->				 
-<!-- check wares in ship first -->	
-		  <set_value name="$Cargo" exact="this.ship.cargo.list" />
-		  <do_if value="$Cargo.count gt 0">		<!-- Cargo LOOP start -->	 
-			 <do_if value="this.$Known">
-		      <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" wares="$Cargo" multiple="true" unbundle="false">
-			   <match_buyer>
+         <set_value name="$Maxprofit" exact="1"/>
+	 	 <set_value name="$found" exact="false" />
+         <set_value name="$Cargo" exact="this.ship.cargo.list" />
+		 <do_if value="$Cargo.count gt 0">		 <!-- check wares in ship first CARGO SALE Start-->	
+			<do_if value="this.$Known"> 
+		      <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" wares="$Cargo" multiple="true">
+				 <match_buyer>
 			     <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
-			   </match_buyer>
+				 </match_buyer>
 			  </find_buy_offer>
-		     </do_if>
-			 <do_else>
-				 <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" wares="$Cargo" multiple="true" unbundle="false">
-			     <match_buyer tradesknownto="this.owner">
-			       <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
-			     </match_buyer>
-			     </find_buy_offer>
-			 
-			 </do_else>	 
-<!-- preference player station START -->
-			 <do_if value="this.$Prefer">
-			  <create_list name="$offers" />
-			  <do_all exact="$buyoffers.count" counter="$i">
+			</do_if> 
+			<do_else>
+			 <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" wares="$Cargo" multiple="true">
+			  <match_buyer tradesknownto="this.owner">
+			     <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
+			  </match_buyer>
+			 </find_buy_offer>
+			</do_else>	 
+<!-- preference player station START -->	
+			<do_if value="this.$Prefer"> 
+			 <create_list name="$offers" />
+			 <do_all exact="$buyoffers.count" counter="$i">
 				 <do_if value="$buyoffers.{$i}.buyer.owner == faction.player">
 					  <append_to_list name="$offers" exact="$buyoffers.{$i}"/>
                  </do_if> 
-			  </do_all>
-			  <do_if value="$offers.count gt 0">
-				  <set_value name="$buyoffers" exact="$offers"/>
-				  <remove_value name="$offers"/>
-              </do_if> 
-			 </do_if>	 
-<!-- preference player station END -->	 
-			 <do_if value="$buyoffers.count" min="1">
-				 <set_value name="$Maxprofit" exact="1"/>
-				 <do_all exact="$buyoffers.count" counter="$i">
-					<do_if value="@$buyoffers.{$i}.ware"> 
+			 </do_all>
+			 <do_if value="$offers.count gt 0">
+				<set_value name="$buyoffers" exact="$offers"/>
+				<remove_value name="$offers"/>
+             </do_if> 
+			</do_if> 	
+<!-- preference player station END -->		 
+			  <do_if value="$buyoffers.count" min="1">
+				  <set_value name="$Maxprofit" exact="1"/>
+				  <do_all exact="$buyoffers.count" counter="$i">
+					 <do_if value="@$buyoffers.{$i}.ware"> 
 					  <set_value name="$Amount" exact="[this.ship.cargo.{$buyoffers.{$i}.ware}.count,$buyoffers.{$i}.amount].min" /> 
-                      <do_if value="$Maxprofit lt $Amount*$buyoffers.{$i}.unitprice">
-						 <set_value name="$buyoffer" exact="$buyoffers.{$i}"/>
-						 <set_value name="$Bprice" exact="$buyoffers.{$i}.unitprice"/>
-                         <set_value name="$TrueAmount" exact="$Amount"/>	
-						 <set_value name="$Maxprofit" exact="$TrueAmount*$Bprice"/>	
-                      </do_if> 
-				    </do_if>	
-			       <wait exact="2ms" />	 
-			     </do_all>
-				 <remove_value name="$buyoffers"/>
+                        <do_if value="$Maxprofit lt $Amount*$buyoffers.{$i}.unitprice">
+						  <set_value name="$buyoffer" exact="$buyoffers.{$i}"/>
+						  <set_value name="$Bprice" exact="$buyoffers.{$i}.unitprice"/>
+                          <set_value name="$TrueAmount" exact="$Amount"/>	
+						  <set_value name="$Maxprofit" exact="$TrueAmount*$Bprice"/>	
+                        </do_if> 
+					 </do_if>	
+					 <wait exact="2ms" />
+				  </do_all>
+				  <remove_value name="$buyoffers"/>
 			  </do_if>
-			  <do_if value="@$buyoffer">
-				 <add_ware_reservation type="sell" object="$buyoffer.buyer" ware="$buyoffer.ware" reserver="this.ship" amount="$TrueAmount" duration="3h"/>
-				 <set_value name="$Ware" exact="$buyoffer.ware"/>
-			     <set_value name="$Buyer" exact="$buyoffer.buyer"/>
-			     <set_value name="$Bowner" exact="$buyoffer.buyer.owner"/>
-			     <set_value name="$BuyerZone" exact="$buyoffer.buyer.zone"/>
-				 <set_value name="$Bprice" exact="$buyoffer.unitprice"/>
+			  <do_if value="@$buyoffer">   <!-- buyoffer found START -->
+					<add_ware_reservation type="sell" object="$buyoffer.buyer" ware="$buyoffer.ware" reserver="this.ship" amount="$TrueAmount" duration="3h"/>
+					<wait min="$Tmin" max="$Tmax"/>
+					<set_value name="$found" exact="true" />
+					<set_value name="$Ware" exact="$buyoffer.ware"/>
+			        <set_value name="$Buyer" exact="$buyoffer.buyer"/>
+			        <set_value name="$Bowner" exact="$buyoffer.buyer.owner"/>
+			        <set_value name="$BuyerZone" exact="$buyoffer.buyer.zone"/>
+				    <set_value name="$Bprice" exact="$buyoffer.unitprice"/>
 <!-- we got the wares now sell them -->
-			     <create_position name="$safepos" space="$BuyerZone" object="$Buyer"/>
-			     <create_position name="$jumppos" x="$safepos.x+$x" y="$safepos.y+$y" z="$safepos.z+$z"/>
-			     <do_if value="(this.ship.zone != $BuyerZone) and this.$Jump">
-					<add_effect object="this.ship" effect="'hq_warpin'">
-                      <safepos value="this.ship.position"/>
-                    </add_effect>
-					<wait exact="5s" />
-				    <warp object="this.ship" zone="$BuyerZone" >
-					    <position value="$jumppos"/>
-				    </warp>
-				 </do_if>
-			     <do_else>
-		            <move_to object="this.ship" destination="$BuyerZone" finishonapproach="false" forceposition="false" travel="true" uselocalhighways="false">
-					  <position value="$jumppos" />
-				   </move_to>
-		         </do_else>
-                 <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
-<!-- now finalize the sale  -->
-				 <wait min="$Tmin" max="$Tmax" />
-			     <remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
-		         <reward_player money="$ComCharge*$Bprice*$TrueAmount/100" />
-				 <set_value name="this.$Budget" exact="$ComCharge*$TrueAmount*$Bprice/100" operation="add"/> 
-			     <apply_experience object="this.ship" role="entityrole.service" experience="'ship_trade_good'" factor="1.0"/> 
-	             <remove_ware_reservation object="$Buyer" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
-				 <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8, trade all wares = %9\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known,this.$Allwares]"/>
-		         <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
-		         <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
-                 <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
-				 <set_value name="$Olist1" exact="'\n Last trade from cargo: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>
-				 <write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoTrader'" text="$Olist1" />
+			        <create_position name="$safepos" space="$BuyerZone" object="$Buyer"/>
+			        <create_position name="$jumppos" x="$safepos.x+$x" y="$safepos.y+$y" z="$safepos.z+$z"/>
+			        <do_if value="this.ship.zone != $BuyerZone and this.$Jump">
+						<add_effect object="this.ship" effect="'hq_warpin'">
+                           <safepos value="this.ship.position"/>
+                        </add_effect>
+						<wait exact="5s" />
+				        <warp object="this.ship" zone="$BuyerZone" >
+					      <position value="$jumppos"/>
+				        </warp>
+					</do_if>
+			        <do_else>
+		              <move_to object="this.ship" destination="$BuyerZone" finishonapproach="true" forceposition="false" forcesteering="false" travel="true" uselocalhighways="false">
+					    <position value="$jumppos" />
+					  </move_to>
+		            </do_else>
+<!-- give it some time -->
+			        <wait exact="2min" />
+<!-- now finalize the sale  -->				
+			        <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
+                    <remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
+			        <remove_ware_reservation object="$Buyer" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
+			        <reward_player money="$ComCharge*$Bprice*$TrueAmount/100" />
+			        <set_value name="this.$Budget" exact="$ComCharge*$TrueAmount*$Bprice/100" operation="add"/> 
+				    <apply_experience object="this.ship" role="entityrole.service" experience="'ship_trade_good'" factor="1.0"/> 
+			        <set_known object="this.ship.cluster" known="true"/>
+			        <set_known object="this.ship.sector" known="true"/>
+			        <set_known object="this.ship.zone" known="true"/>
+			        <do_if value="$Bowner != faction.player">
+				      <wait min="4s" max="9s"/>
+				      <set_faction_known faction="$Bowner" known="true"/>
+				      <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+                    </do_if>
+					<set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known]"/>
+		            <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
+		            <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
+                    <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
+					<set_value name="$Olist1" exact="'\n Last trade from cargo: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>
+					<write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoMiner'" text="$Olist1" />
+			        <wait min="$Tmin" max="$Tmax"/>
 <!-- clean up -->
-		      <remove_value name="$safepos"/>
-		      <remove_value name="$jumppos"/>
-		      <remove_value name="$buyoffer"/>
-		      <remove_value name="$Buyer"/>
-			  <remove_value name="$Ware"/>
-		      <remove_value name="$Bprice"/>
-		      <remove_value name="$TrueAmount"/>
-		      <remove_value name="$BuyerZone"/>
-		      <remove_value name="$Bowner"/>
-			 </do_if>
-		 </do_if>	  	<!-- Cargo LOOP End -->	 
-<!-- ==================================================w Gwares LOOP start=============================================================== -->	
-		 <set_value name="$Maxprofit" exact="100" />
-		 <set_value name="$found" exact="false" />
-		
-		 <do_all exact="$Gwares.count" counter="$k">
-<!-- finished cargo sale. Now the real deal: thin out lists for max profit -->
-			<do_if value="this.$Known"> 
-		    <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" multiple="true" wares="$Gwares.{$k}">
-		     <match_buyer>
+		            <remove_value name="$safepos"/>
+		            <remove_value name="$jumppos"/>
+		            <remove_value name="$buyoffer"/>
+		            <remove_value name="$Buyer"/>
+			        <remove_value name="$Ware"/>
+		            <remove_value name="$Bprice"/>
+		            <remove_value name="$TrueAmount"/>
+		            <remove_value name="$BuyerZone"/>
+		            <remove_value name="$Bowner"/>
+			 </do_if>   <!-- buyoffer found End -->
+		 </do_if>	  <!-- finished cargo sale, now either again or go mining stuff  CARGO SALE End -->
+         <set_value name="$Cargo" exact="this.ship.cargo.list" />
+<!-- THE BIG IF -->	
+		<do_if value="($Cargo.count == 0) or ((not $found) and (this.ship.cargo.free.solid gt 1000)) or ((not $found) and (this.ship.cargo.free.liquid gt 1000))"> 
+<!--  first check market, get list of collectables in demand -->		
+		  <do_if value="this.$Known">  
+			 <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" multiple="true" wares="$Cwares">
+				 <match_buyer>
 			     <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
-			 </match_buyer>
-			  </find_buy_offer>
-			  <find_sell_offer tradepartner="this.ship" space="$range" result="$selloffers" multiple="true" wares="$Gwares.{$k}">
-				 <match_seller>
-			      <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
-				 </match_seller>
-			  </find_sell_offer>
-			 </do_if> 
-			 <do_else> 
-			  <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" multiple="true" wares="$Gwares.{$k}">
-		      <match_buyer tradesknownto="this.owner">
+				 </match_buyer>
+			 </find_buy_offer> 
+		  </do_if> 	
+	      <do_else>
+			 <find_buy_offer tradepartner="this.ship" space="$range" result="$buyoffers" wares="$Cwares" multiple="true">
+			  <match_buyer tradesknownto="this.owner">
 			     <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
 			  </match_buyer>
-			  </find_buy_offer>
-			  <find_sell_offer tradepartner="this.ship" space="$range" result="$selloffers" multiple="true" wares="$Gwares.{$k}">
-				 <match_seller tradesknownto="this.owner">
-			      <match_relation_to object="this.ship" relation="enemy" comparison="not"/>
-				 </match_seller>
-			  </find_sell_offer>
-			 </do_else> 
-<!-- buyoffer and selloffer found START -->			 
-        <do_if value="$buyoffers.count and $selloffers.count">
+			 </find_buy_offer>
+		  </do_else>	 
 <!-- preference player station START -->	
-				<do_if value="this.$Prefer">	
-			   <create_list name="$offers" />
-			   <do_all exact="$buyoffers.count" counter="$i">
-				  <do_if value="$buyoffers.{$i}.buyer.owner == faction.player">
-					 <append_to_list name="$offers" exact="$buyoffers.{$i}"/>
-                  </do_if> 
-			   </do_all>
-			   <do_if value="$offers.count">
+		  <do_if value="this.$Prefer">  
+			 <create_list name="$offers" />
+			 <do_all exact="$buyoffers.count" counter="$i">
+				 <do_if value="$buyoffers.{$i}.buyer.owner == faction.player">
+					  <append_to_list name="$offers" exact="$buyoffers.{$i}"/>
+                 </do_if> 
+			 </do_all>
+			 <do_if value="$offers.count gt 0">
 				  <set_value name="$buyoffers" exact="$offers"/>
 				  <remove_value name="$offers"/>
-               </do_if> 
-				</do_if> 	
-<!-- preference player station END, now find the best buy offer -->			 
-         <shuffle_list list="$buyoffers"/>
-         <sort_trades name="$buyoffers" tradelist="$buyoffers" sorter="relativeprice"/>
-         <set_value name="$buyoffertemp" exact="$buyoffers.{$buyoffers.count}"/>	        <!-- bug FIXED -->
-		     <remove_value name="$buyoffers"/>
-<!-- preference player station START -->	
-				<do_if value="this.$Prefer">		
-			   <create_list name="$offers" />
-			   <do_all exact="$selloffers.count" counter="$i">
-				  <do_if value="$selloffers.{$i}.seller.owner == faction.player">
-					 <append_to_list name="$offers" exact="$selloffers.{$i}"/>
-                  </do_if> 
-			   </do_all>
-			   <do_if value="$offers.count gt 0">
-					<set_value name="$selloffers" exact="$offers"/>
-				  <remove_value name="$offers"/>
-               </do_if> 
-				</do_if> 	
-<!-- preference player station END, now find best sell offer for the best buy offer  -->									
-				 <do_all exact="$selloffers.count" counter="$i">
-					<do_if value="$buyoffertemp.ware?">                      <!-- bug FIXED-->
-				   <set_value name="$Amount" exact="[this.ship.cargo.{$buyoffertemp.ware}.free,$buyoffertemp.amount,$selloffers.{$i}.amount,player.money/(2*$selloffers.{$i}.unitprice)].min"/>	   <!-- bug FIXED-->
-  	                 <do_if value="$Maxprofit lt $Amount*($ComCharge*$buyoffertemp.unitprice/100-$selloffers.{$i}.unitprice)">     <!-- bug FIXED-->
-					  <set_value name="$Maxprofit" exact="$Amount*($ComCharge*$buyoffertemp.unitprice/100-$selloffers.{$i}.unitprice)" />    <!-- bug FIXED -->
-					  <set_value name="$selloffer" exact="$selloffers.{$i}"/>
-					  <set_value name="$found" exact="true" />
-					  <set_value name="$TrueAmount" exact="[this.ship.cargo.{$buyoffertemp.ware}.free,$buyoffertemp.amount,$selloffers.{$i}.amount,player.money/(2*$selloffers.{$i}.unitprice)].min"/>
-					  <set_value name="$buyoffer" exact="$buyoffertemp" /> 
-					  <set_value name="$Sprice" exact="$selloffer.unitprice"/>
-			          <set_value name="$Bprice" exact="$buyoffer.unitprice"/>
-					  <set_value name="$Seller" exact="$selloffer.seller"/>
-		              <set_value name="$SellerZone" exact="$selloffer.seller.zone"/>
-		              <set_value name="$Sowner" exact="$selloffer.seller.owner"/>
-		              <set_value name="$Ware" exact="$selloffer.ware"/>
-		              <set_value name="$Buyer" exact="$buyoffer.buyer"/>
-		              <set_value name="$Bowner" exact="$buyoffer.buyer.owner"/>
-		              <set_value name="$BuyerZone" exact="$buyoffer.buyer.zone"/>
-		             </do_if> 
-					</do_if>
-			    <wait exact="1ms" />	
-		     </do_all>
-				 <remove_value name="$selloffers" />
-        </do_if> 	<!-- buyeoffer and selloffer found END -->
-<!-- =================================== Gwares LOOP end ====================================================================================================== -->		
-			  <wait exact="1ms" />
-     </do_all>				
-     <do_if value="$found and @$buyoffer and @$selloffer">	 <!-- Seller found, buy and sell offer still available? START -->
-        
-<!-- we have found a deal, now nail it -->
-		    <add_ware_reservation type="buy" object="$selloffer.seller" ware="$selloffer.ware" reserver="this.ship" amount="$TrueAmount" duration="2h"/>
-		    <add_ware_reservation type="sell" object="$buyoffer.buyer" ware="$buyoffer.ware" reserver="this.ship" amount="$TrueAmount" duration="3h"/>
-        
-<!-- get the wares  -->
-			  <create_position name="$safepos" space="$SellerZone" object="$Seller" />
-			  <create_position name="$jumppos" x="$safepos.x+$x" y="$safepos.y+$y" z="$safepos.z+$z"/>
-			  <do_if value="(this.ship.zone != $SellerZone) and this.$Jump">
-				 <add_effect object="this.ship" effect="'hq_warpin'">
-           <safepos value="this.ship.position"/>
-         </add_effect>
-				 <wait exact="5s" />
-				 <warp object="this.ship" zone="$SellerZone" >
-					 <position value="$jumppos"/>
-				 </warp>
-			  </do_if>
-			  <do_else>
-	       <move_to object="this.ship" destination="$SellerZone" finishonapproach="false" forceposition="false" travel="true" uselocalhighways="false">
-					  <position value="$jumppos" />
-				 </move_to>
-        </do_else>
-<!-- now finalize the purchase -->
-		    <wait min="$Tmin" max="$Tmax" />  		
-			<add_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
-  		    <remove_cargo object="$Seller" ware="$Ware" exact="$TrueAmount"/>
-            <remove_ware_reservation object="$Seller" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
-		    <set_known object="this.ship.cluster" known="true"/>
-			<set_known object="this.ship.sector" known="true"/>
-			<set_known object="this.ship.zone" known="true"/>
-			 <do_if value="$Sowner != faction.player">
-				<set_faction_known faction="$Sowner" known="true"/>
-			    <add_faction_relation faction="faction.player" otherfaction="$Sowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
-			 </do_if>	
-<!-- we got the wares now sell them -->
-			  <create_position name="$safepos" space="$BuyerZone" object="$Buyer"/>
-			  <create_position name="$jumppos" x="$safepos.x+$x" y="$safepos.y+$y" z="$safepos.z+$z"/>
-			  <do_if value="(this.ship.zone != $BuyerZone) and this.$Jump">
-				<add_effect object="this.ship" effect="'hq_warpin'">
-                  <safepos value="this.ship.position"/>
-                </add_effect>
-				<wait exact="5s" />
-				<warp object="this.ship" zone="$BuyerZone" >
-				    <position value="$jumppos"/>
-				</warp>
-			  </do_if>
-			  <do_else>
-	            <move_to object="this.ship" destination="$BuyerZone" finishonapproach="false" forceposition="false" travel="true" uselocalhighways="false">
-					<position value="$jumppos" />
-				</move_to>
-		      </do_else>
-<!-- now finalize the sale  -->
-		    <wait min="$Tmin" max="$Tmax" />  
-            <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
-			<remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
-		    <reward_player money="$ComCharge*$TrueAmount*$Bprice/100-$Sprice*$TrueAmount" />
-            <set_value name="this.$Budget" exact="$ComCharge*$TrueAmount*$Bprice/100-$Sprice*$TrueAmount" operation="add"/>
-		    <apply_experience object="this.ship" role="entityrole.service" experience="'ship_trade_good'" factor="1.0"/> 
-	        <remove_ware_reservation object="$Buyer" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
-			  <set_known object="this.ship.cluster" known="true"/>
-			  <set_known object="this.ship.sector" known="true"/>
-			  <set_known object="this.ship.zone" known="true"/>
-			  <do_if value="$Bowner != faction.player">
-                 <set_faction_known faction="$Bowner" known="true"/>
-				 <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
-			  </do_if>	
-			  <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8, trade all wares = %9\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known,this.$Allwares]"/>
-		      <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
-		      <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
-              <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
-			  <set_value name="$Olist1" exact="'\n Last trade: Bought %,s of %2 from %3 for %,s Cr \n and sold it to %5 for %,s Cr for a profit (including my fee) of %,s Cr.'.[$TrueAmount,$Ware,$Seller.knownname,$Sprice*$TrueAmount/100,$Buyer.knownname,$TrueAmount*$Bprice/100,($ComCharge*$TrueAmount*$Bprice/100-$Sprice*$TrueAmount)/100]" operation="add"/>
-			  <write_to_logbook category="upkeep" money="$ComCharge*$TrueAmount*$Bprice/100-$Sprice*$TrueAmount" title="'AutoTrader'" text="$Olist1" />
-	 </do_if> <!-- Seller found, buy and sell offer still available? END -->
+             </do_if> 
+		  </do_if> 		
+<!-- preference player station END -->		  
+          <do_if value="$buyoffers.count" min="1">
+				 <set_value name="$Maxprofit" exact="1"/>
+					 <do_all exact="$buyoffers.count" counter="$i">
+					   <set_value name="$StillNeed" exact="0"/>
+						 <set_value name="$Amount" exact="$buyoffers.{$i}.amount" />
+						 <set_value name="$Have" exact="this.ship.cargo.{$buyoffers.{$i}.ware}.count"/>
+						 <set_value name="$Room" exact="this.ship.cargo.{$buyoffers.{$i}.ware}.free" />
+						 <do_if value="($Room gt  ($Amount - $Have)) and (($Amount - $Have ) gt 0)">
+							<set_value name="$StillNeed" exact="$Amount - $Have"/>
+					 	 </do_if>
+						 <do_elseif value="$Amount ge ($Room + $Have) ">
+						  <set_value name="$StillNeed" exact="$Room"/>
+						  <set_value name="$Amount" exact="$Room + $Have " />
+						 </do_elseif>
+						 <do_if value="$Maxprofit lt $Amount*$buyoffers.{$i}.unitprice">
+						  <set_value name="$buyoffer" exact="$buyoffers.{$i}"/>
+						  <set_value name="$Bprice" exact="$buyoffers.{$i}.unitprice"/>
+                          <set_value name="$TrueAmount" exact="$Amount"/>	
+						  <set_value name="$Maxprofit" exact="$TrueAmount*$Bprice"/>	
+						  <set_value name="$Gmax" exact="$StillNeed"/>	
+                         </do_if> 
+					 </do_all>
+				     <remove_value name="$buyoffers"/>
+		  </do_if>
+		  <do_if value="@$buyoffer"> <!-- buyoffer found START -->
+				<add_ware_reservation type="sell" object="$buyoffer.buyer" ware="$buyoffer.ware" reserver="this.ship" amount="$TrueAmount" duration="3h"/>
+				<set_value name="$Ware" exact="$buyoffer.ware"/>
+			    <set_value name="$Buyer" exact="$buyoffer.buyer"/>
+			    <set_value name="$Bowner" exact="$buyoffer.buyer.owner"/>
+			    <set_value name="$BuyerZone" exact="$buyoffer.buyer.zone"/>
+				<set_value name="$Bprice" exact="$buyoffer.unitprice"/>
+<!-- we have a buyer let's get the wares, optimze region selection: find one which has wares -->
+				<set_value name="$TheZone" exact="null"/>
+				<do_if value="this.$Known">
+					<find_cluster name="$Clusters" multiple="true">
+					  <match_relation_to object="player.entity" comparison="not" relation="enemy" />
+				    </find_cluster>	
+				</do_if>		
+				<do_else>	
+				 <find_cluster name="$Clusters" multiple="true">
+					<match knownto="faction.player" />
+					<match_relation_to object="player.entity" comparison="not" relation="enemy" /> 
+				 </find_cluster>	
+				</do_else>
+                <do_all exact="$Clusters.count" counter="$ClusterCounter">
+                  <set_value name="$Cluster" exact="$Clusters.{$ClusterCounter}" />
+					<do_if value="this.$Known">
+					 <find_sector name="$Sectors" space="$Cluster" multiple="true" >
+					   <match_relation_to object="player.entity" comparison="not" relation="enemy" />
+				     </find_sector>
+					</do_if>		
+				    <do_else>	
+				      <find_sector name="$Sectors" space="$Cluster" multiple="true" >
+					     <match knownto="faction.player" />
+					     <match_relation_to object="player.entity" comparison="not" relation="enemy" /> 
+				      </find_sector>	
+				    </do_else>
+				    <do_all exact="$Sectors.count" counter="$SectorCounter">	
+					  <find_resource ware="$Ware" refobject="$Sectors.{$SectorCounter}" zone="$Zone" position="$ResourcePosition" snap="false"/>
+					  <do_if value="@$Zone">
+						 <set_value name="$TheZone" exact="$Zone"/> 
+					 </do_if>
+					 <wait exact="1ms"/>
+				    </do_all>
+				</do_all>
+				<remove_value name="$Clusters"/>		 
+				<remove_value name="$ClusterCounter"/>			 
+				<remove_value name="$Cluster"/>
+				<remove_value name="$Sectors"/>		 
+				<remove_value name="$SectorCounter"/>			 
+				<remove_value name="$Zone"/>
+			    <remove_value name="$ResourcePosition"/>
+<!-- Did we find a zone?  $TheZone may be null or not of type sector nor zone, not sure why!!   Check  !!!   18.07.2022    START -->						
+				<do_if value="$TheZone">
+                  <do_if value="not ($TheZone.isclass.zone or $TheZone.isclass.sector)">
+		            <write_to_logbook category="alerts" title="'ATTENTION TheZone invalid, please contact mod author'" text="'%1 invalid TheZone value = %2'.[this.ship.knownname, $TheZone]"/>
+                  </do_if>		  
+<!-- We have a sector with max yield, let's harvest -->	 
+				  <do_if value="this.ship.zone != $TheZone and this.$Jump">
+					 <add_effect object="this.ship" effect="'hq_warpin'">
+                       <safepos value="this.ship.position"/>
+                     </add_effect>
+					 <wait exact="5s" />
+				     <warp object="this.ship" zone="$TheZone" >
+					   <position x="0km" y="5km" z="0km" />
+				     </warp>
+				  </do_if>
+			      <do_else>
+		            <move_to object="this.ship" destination="$TheZone" finishonapproach="false" forceposition="false" forcesteering="false" travel="true" uselocalhighways="false" >
+					   <position x="1000m" y="5000m" z="-1000m"/>
+					</move_to>
+		          </do_else>
+	              <set_value name="$Gathertime" min="4*$Tmin" max="7*$Tmax"/>
+<!-- define amount to be collected -->
+				  <set_value name="$Gathertime" operation="add" exact="player.age"/>
+ 		          <do_while value="player.age lt $Gathertime">
+					<create_position name="$randompos" object="this.ship" min="1km" max="3km"/>
+					<move_to object="this.ship" destination="$TheZone" finishonapproach="false" forceposition="false" forcesteering="true">
+					  <position value="$randompos"/>
+					  <interrupt_after_time time="20s"/>
+				    </move_to>
+                    <wait min="1min" max="3min"/>
+					<set_value name="$Gathered" min="$Gmax/10" max="$Gmax/5"/>  
+	    		    <deplete_yield sector="this.ship.sector" container="this.ship" ware="$Ware" amount="$Gathered"/>
+	 	            <do_if value="this.ship.cargo.{$Ware}.count ge $Gmax"> 
+					  <apply_experience object="this.ship" role="entityrole.service" experience="'ship_mine_good'" factor="1.0"/> 
+                      <break/>  <!-- we got enough -->
+                    </do_if>	 
+				  </do_while>
+			      <remove_value name="$Gathertime"/>
+				  <remove_value name="$Gmax"/>
+				  <remove_value name="$TheZone"/>
+				  <remove_value name="$Gathered"/>
+				  <create_position name="$safepos" space="$BuyerZone" object="$Buyer"/>
+			      <create_position name="$jumppos" x="$safepos.x+$x" y="$safepos.y+$y" z="$safepos.z+$z"/>
+			      <do_if value="this.ship.zone != $BuyerZone and this.$Jump">
+					 <add_effect object="this.ship" effect="'hq_warpin'">
+                       <safepos value="this.ship.position"/>
+                     </add_effect>
+					 <wait exact="5s" />
+				     <warp object="this.ship" zone="$BuyerZone" >
+					   <position value="$jumppos"/>
+				     </warp>
+				  </do_if>
+			      <do_else>
+		            <move_to object="this.ship" destination="$BuyerZone" finishonapproach="false" forceposition="false" forcesteering="false" travel="true" uselocalhighways="false">
+					   <position value="$jumppos" />
+					</move_to>
+		          </do_else>
+<!-- give it some time -->
+			      <wait exact="2min" />
+<!-- now finalize the sale  -->					
+			      <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
+                  <remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
+			      <remove_ware_reservation object="$Buyer" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
+			      <reward_player money="$ComCharge*$Bprice*$TrueAmount/100" />
+			      <set_value name="this.$Budget" exact="$ComCharge*$TrueAmount*$Bprice/100" operation="add"/> 
+			      <apply_experience object="this.ship" role="entityrole.service" experience="'ship_trade_good'" factor="1.0"/> 
+				  <set_known object="this.ship.cluster" known="true"/>
+			      <set_known object="this.ship.sector" known="true"/>
+			      <set_known object="this.ship.zone" known="true"/>
+			      <do_if value="$Bowner != faction.player">
+				    <wait min="4s" max="9s"/>
+				    <set_faction_known faction="$Bowner" known="true"/>
+				    <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+                  </do_if>
+			      <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known]"/>
+		          <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
+		          <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
+                  <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
+			      <set_value name="$Olist1" exact="'\n Last trade: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>	
+			      <write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoMiner'" text="$Olist1" />	
+			    </do_if>	 <!-- did we find a zone? END -->
+		  </do_if>	      <!-- buyoffer found End -->
 <!-- clean up -->
-		    <remove_value name="$safepos"/>
-		    <remove_value name="$jumppos"/>
-		    <remove_value name="$Tradenpc"/>
-		    <remove_value name="$buyoffer"/>
-		    <remove_value name="$buyoffertemp"/>
-		    <remove_value name="$selloffer"/>
-		    <remove_value name="$Buyer"/>
-		    <remove_value name="$Seller"/>
-		    <remove_value name="$Sprice"/>
-		    <remove_value name="$Bprice"/>
-		    <remove_value name="$TrueAmount"/>
-		    <remove_value name="$SellerZone"/>
-		    <remove_value name="$BuyerZone"/>
-		    <remove_value name="$Amount"/>
-		    <remove_value name="$Sowner"/>
-		    <remove_value name="$Bowner"/>
-			<wait min="$Tmin" max="$Tmax" />  
-	      <resume label="start" />
+		  <remove_value name="$safepos"/>
+		  <remove_value name="$jumppos"/>
+		  <remove_value name="$Tradenpc"/>
+		  <remove_value name="$buyoffer"/>
+		  <remove_value name="$Buyer"/>
+		  <remove_value name="$Ware"/>
+		  <remove_value name="$Bprice"/>
+		  <remove_value name="$TrueAmount"/>
+		  <remove_value name="$BuyerZone"/>
+		  <remove_value name="$Bowner"/>
+		</do_if>   <!-- THE BIG IF -->
+		<wait min="$Tmin" max="$Tmax" />  
+		<resume label="start" />
     </actions>
   </attention>
 </aiscript>
