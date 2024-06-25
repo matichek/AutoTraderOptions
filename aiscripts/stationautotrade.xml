@@ -60,8 +60,8 @@
 		  <set_value name="$ComCharge" exact="100-$Level/4"/> 
 
             <!-- M -->
-		  <set_value name="$Tmax" exact="1s"/>
-		  <set_value name="$Tmin" exact="1"/> 	
+		  <set_value name="$Tmax" exact="2s"/>
+		  <set_value name="$Tmin" exact="2"/> 	
 
 <!-- skill check end   -->				 
 <!-- check wares in ship first -->	
@@ -146,7 +146,7 @@
 	             <remove_ware_reservation object="$Buyer" reserver="this.ship" ware="$Ware" amount="$TrueAmount"/> 
 				 <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8, trade all wares = %9\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known,this.$Allwares]"/>
 		         <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
-		         <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
+		         <set_value name="$Olist1" exact="' Trillion2 and '" operation="add"/>
                  <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
 				 <set_value name="$Olist1" exact="'\n Last trade from cargo: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>
 				 <write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoTrader'" text="$Olist1" />
@@ -286,7 +286,7 @@
 			<set_known object="this.ship.zone" known="true"/>
 			 <do_if value="$Sowner != faction.player">
 				<set_faction_known faction="$Sowner" known="true"/>
-			    <add_faction_relation faction="faction.player" otherfaction="$Sowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+			    <add_faction_relation faction="faction.player" otherfaction="$Sowner" value="0.001" reason="relationchangereason.tradecompleted"/>
 			 </do_if>	
 <!-- we got the wares now sell them -->
 			  <create_position name="$safepos" space="$BuyerZone" object="$Buyer"/>
@@ -318,7 +318,7 @@
 			  <set_known object="this.ship.zone" known="true"/>
 			  <do_if value="$Bowner != faction.player">
                  <set_faction_known faction="$Bowner" known="true"/>
-				 <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+				 <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.001" reason="relationchangereason.tradecompleted"/>
 			  </do_if>	
 			  <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8, trade all wares = %9\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known,this.$Allwares]"/>
 		      <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
