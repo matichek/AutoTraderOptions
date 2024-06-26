@@ -1,5 +1,7 @@
 [color=cyan]AutoTrader v0.9 January 30, 2023[/color]
 
+## Moded - Matija - no comission trader, super fast (no big cooldowns)
+
 (see Changelog for details)
 
 This is a "fire-and-forget" version of the "old" MK3 Universe Trader by Mkess and BurnIt!.

@@ -35,10 +35,14 @@
 		 <set_value name="$Newbudget" exact="($Oldbudget)L % (10^12)L"/>
 		 <set_value name="this.$Budget" exact="100*$Newbudget"/>
 <!-- skill check start -->	
-		 <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" /> 
-		 <set_value name="$ComCharge" exact="100-$Level/4"/> 
-		 <set_value name="$Tmax" exact="(1380 - 9*$Level)s"/>
-		 <set_value name="$Tmin" exact="2*$Tmax/3"/> 	
+		 <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" />
+
+		
+		 <!-- <set_value name="$ComCharge" exact="100-$Level/4"/>  -->
+		 <set_value name="$ComCharge" exact="100"/> 
+		 
+		 <set_value name="$Tmax" exact="2s"/>
+		 <set_value name="$Tmin" exact="2"/> 	
 <!-- skill check end   -->				 
          <set_value name="$Maxprofit" exact="1"/>
 	 	 <set_value name="$found" exact="false" />
@@ -115,7 +119,7 @@
 					  </move_to>
 		            </do_else>
 <!-- give it some time -->
-			        <wait exact="2min" />
+			        <wait exact="5s" />
 <!-- now finalize the sale  -->				
 			        <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
                     <remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
@@ -129,11 +133,11 @@
 			        <do_if value="$Bowner != faction.player">
 				      <wait min="4s" max="9s"/>
 				      <set_faction_known faction="$Bowner" known="true"/>
-				      <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+				      <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.001" reason="relationchangereason.tradecompleted"/>
                     </do_if>
 					<set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known]"/>
 		            <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
-		            <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
+		            <set_value name="$Olist1" exact="' Trillion Mine2 and '" operation="add"/>
                     <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
 					<set_value name="$Olist1" exact="'\n Last trade from cargo: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>
 					<write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoMiner'" text="$Olist1" />
@@ -281,9 +285,9 @@
 					<create_position name="$randompos" object="this.ship" min="1km" max="3km"/>
 					<move_to object="this.ship" destination="$TheZone" finishonapproach="false" forceposition="false" forcesteering="true">
 					  <position value="$randompos"/>
-					  <interrupt_after_time time="20s"/>
+					  <interrupt_after_time time="3s"/>
 				    </move_to>
-                    <wait min="1min" max="3min"/>
+                    <wait min="3s" max="3s"/>
 					<set_value name="$Gathered" min="$Gmax/10" max="$Gmax/5"/>  
 	    		    <deplete_yield sector="this.ship.sector" container="this.ship" ware="$Ware" amount="$Gathered"/>
 	 	            <do_if value="this.ship.cargo.{$Ware}.count ge $Gmax"> 
@@ -312,7 +316,7 @@
 					</move_to>
 		          </do_else>
 <!-- give it some time -->
-			      <wait exact="2min" />
+			      <wait exact="3s" />
 <!-- now finalize the sale  -->					
 			      <add_cargo object="$Buyer" ware="$Ware" exact="$TrueAmount"/>
                   <remove_cargo object="this.ship" ware="$Ware" exact="$TrueAmount"/>
@@ -326,11 +330,11 @@
 			      <do_if value="$Bowner != faction.player">
 				    <wait min="4s" max="9s"/>
 				    <set_faction_known faction="$Bowner" known="true"/>
-				    <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.00001" reason="relationchangereason.tradecompleted"/>
+				    <add_faction_relation faction="faction.player" otherfaction="$Bowner" value="0.001" reason="relationchangereason.tradecompleted"/>
                   </do_if>
 			      <set_value name="$Olist1" exact="'%1 %2 (%3) on %4(%5)\n Parameters: jump = %6, prefer player stations = %7, know all trades = %8\n Total profit I made for you, Sir: Cr. '.[$Title,$Pilot,$Level,this.ship.knownname,this.ship.idcode,this.$Jump,this.$Prefer,this.$Known]"/>
 		          <set_value name="$Olist1" exact="' %,s'.[this.$TBudget]" operation="add"/>
-		          <set_value name="$Olist1" exact="' Trillion and '" operation="add"/>
+		          <set_value name="$Olist1" exact="' Trillion Mine2 and '" operation="add"/>
                   <set_value name="$Olist1" exact="' %,s'.[this.$Budget/100]" operation="add"/>
 			      <set_value name="$Olist1" exact="'\n Last trade: Sold %,s of %2 to %3 for %,s Cr including my fee.'.[$TrueAmount,$Ware,$Buyer.knownname,($ComCharge*$Bprice*$TrueAmount/100)/100]" operation="add"/>	
 			      <write_to_logbook category="upkeep" money="$ComCharge*$Bprice*$TrueAmount/100" title="'AutoMiner'" text="$Olist1" />	
