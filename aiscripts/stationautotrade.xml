@@ -34,7 +34,7 @@
 		   <set_value name="this.$Prefer" exact="true"/>
 		  </do_if>
 		  <do_if  value="not this.$Known?"  >
-		   <set_value name="this.$Known" exact="true"/>
+		   <set_value name="this.$Known" exact="false"/>
 		  </do_if>
 		  <do_if  value="not this.$Allwares?"  >
 		   <set_value name="this.$Allwares" exact="true"/>
@@ -57,7 +57,7 @@
           <set_value name="this.$Budget" exact="100*$Newbudget"/>
 <!-- skill check start -->	
 		  <set_value name="$Level" exact="[this.assignedcontrolled.combinedskill,90].min" /> 
-		  <set_value name="$ComCharge" exact="100-$Level/4"/> 
+		  <set_value name="$ComCharge" exact="100"/> 
 
             <!-- M -->
 		  <set_value name="$Tmax" exact="2s"/>
@@ -295,7 +295,7 @@
 				<add_effect object="this.ship" effect="'hq_warpin'">
                   <safepos value="this.ship.position"/>
                 </add_effect>
-				<wait exact="5s" />
+				<wait exact="2s" />
 				<warp object="this.ship" zone="$BuyerZone" >
 				    <position value="$jumppos"/>
 				</warp>
